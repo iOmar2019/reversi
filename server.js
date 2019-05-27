@@ -176,7 +176,7 @@ socket.on('send_message',function(payload){
     return;
   }
 
-  var message = payload.username;
+  var username = payload.username;
   if(('undefined' === typeof username) || !username){
     var error_message = 'send_message didn\'t specify a username, command aborted';
     log(error_message);
