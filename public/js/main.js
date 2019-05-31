@@ -43,6 +43,40 @@ if(payload.socket_id == socket.id) {
   return;
 }
 
+/* If someone joined the add a new row to the lobby table */
+var dom_elements = $('.socket_' +payload.socket_id);
+/* If we don't already have an entry for this person */
+if(dom_elements.length == 0) {
+  var nodeA = $('<div></div>');
+  nodeA.addClass('socket_' +patload.socket_id);
+
+  var nodeB = $('<div></div>');
+  nodeB.addClass('socket_' +patload.socket_id);
+
+  var nodeC = $('<div></div>');
+  nodeC.addClass('socket_' +patload.socket_id);
+
+  nodeA.addClass('w-100');
+
+  nodeB.addClass('col-9 text-right');
+  nodeB.append('<h4>' +payload.username+ '</4>');
+
+  nodeC.addClass('col-3 text-left');
+  var buttonC = makeInviteButton();
+  nodeC.append(buttonC);
+
+  nodeA.hide();
+  nodeB.hide();
+  nodeC.hide();
+  $('#players').append(nodeA, nodeB, nodeC);
+  nodeA.slideDown(1000);
+  nodeB.slideDown(1000);
+  nodeC.slideDown(1000);
+  
+}
+
+
+/* Manage the message that a new player has joined */
 var newHTML = '<p>' +payload.username+' just entered the lobby</p>');
 var newNode = $(newHTML);
 newNode.hide();
