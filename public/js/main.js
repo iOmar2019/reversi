@@ -17,7 +17,7 @@ var username = getURLParameters('username');
 if('undefined' == typeof username || !username){
     username = 'Anonymous_'+Math.random();
 }
-var chat_room = getURLParameters('game_id')
+var chat_room = getURLParameters('game_id');
 if('undefined' == typeof chat_room || !chat_room) {
     chat_room = 'lobby';
 }
@@ -49,13 +49,13 @@ var dom_elements = $('.socket_' +payload.socket_id);
 /* If we don't already have an entry for this person */
 if(dom_elements.length == 0) {
   var nodeA = $('<div></div>');
-  nodeA.addClass('socket_' +patload.socket_id);
+  nodeA.addClass('socket_' +payload.socket_id);
 
   var nodeB = $('<div></div>');
-  nodeB.addClass('socket_' +patload.socket_id);
+  nodeB.addClass('socket_' +payload.socket_id);
 
   var nodeC = $('<div></div>');
-  nodeC.addClass('socket_' +patload.socket_id);
+  nodeC.addClass('socket_' +payload.socket_id);
 
   nodeA.addClass('w-100');
 
@@ -138,7 +138,7 @@ function send_message(){
 }
 
 function makeInviteButton(){
-  var newHTML = '<button type=\' button\' class=\ 'btn btn-outline-primary\'>Invite</button>';
+  var newHTML = '<button type=\'button\' class=\'btn btn-outline-primary\'>Invite</button>';
   var newNode = $(newHTML);
   return(newNode);
 }
