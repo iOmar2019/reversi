@@ -31,6 +31,7 @@ socket.on('log', function(array){
   console.log.apply(console,array);
 });
 
+
 /* What to do when the server responds that someone joined a room */
 socket.on('join_room_response',function(payload){
   if(payload.result == 'fail'){
@@ -74,7 +75,11 @@ if(dom_elements.length == 0) {
   nodeC.slideDown(1000);
 
 }
-
+else{
+  var buttonC = makeInviteButton();
+  $('.socket_' +payload.socket_id+' button').replaceWith(buttonC);
+  dom_elements.slideDown(1000);
+}
 
 /* Manage the message that a new player has joined */
 var newHTML = '<p>' +payload.username+' just entered the lobby</p>');
@@ -83,6 +88,37 @@ newNode.hide();
   $('#messages').append(newNode);
   newNode.slideDown(1000);
 });
+
+
+/* What to do when the server says that someone left a room */
+socket.on('player_disconnected',function(payload){
+  if(payload.result == 'fail'){
+    alert(payload.message);
+    return;
+  }
+
+/* If we are being notified that we left the room, then ignore it */
+if(payload.socket_id == socket.id) {
+  return;
+}
+
+/* If someone left the room then animate out all their content */
+var dom_elements = $('.socket_' +payload.socket_id);
+
+/* If something exists*/
+if(dom_elements.length != 0) {
+    dom_elements.slideUp(1000);
+}
+
+/* Manage the message that a player has left */
+var newHTML = '<p>' +payload.username+' has left the lobby</p>');
+var newNode = $(newHTML);
+newNode.hide();
+  $('#messages').append(newNode);
+  newNode.slideDown(1000);
+});
+
+
 
 socket.on('send_message_response',function(payload){
   if(payload.result == 'fail'){
