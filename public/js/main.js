@@ -17,22 +17,37 @@ var username = getURLParameters('username');
 if('undefined' == typeof username || !username){
     username = 'Anonymous_'+Math.random();
 }
-var chat_room = 'One_Room';
+var chat_room = getURLParameters('game_id')
+if('undefined' == typeof chat_room || !chat_room) {
+    chat_room = 'lobby';
+}
 
 
 /* Connect to the socket server */
-
 var socket = io.connect();
 
+/* What to do when the server send me a log message */
 socket.on('log', function(array){
   console.log.apply(console,array);
 });
+
+/* What to do when the server responds that someone joined a room */
 socket.on('join_room_response',function(payload){
   if(payload.result == 'fail'){
     alert(payload.message);
     return;
   }
-  $('#messages').append('<p>New user joined the room: '+payload.username+'</p>');
+
+/* If we are being notified that we joined the room, then ignore it */
+if(payload.socket_id == socket.id) {
+  return;
+}
+
+var newHTML = '<p>' +payload.username+' just entered the lobby</p>');
+var newNode = $(newHTML);
+newNode.hide();
+  $('#messages').append(newNode);
+  newNode.slideDown(1000);
 });
 
 socket.on('send_message_response',function(payload){
