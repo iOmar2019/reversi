@@ -149,7 +149,17 @@ io.sockets.on('connection',function (socket){
 
   });
     socket.on('disconnect',function(){
-    log('A web site disconnected from the server');
+    log('Client disconnected '+JSON.stringify(players[socket.id]));
+    if('undefined' !== typeof players[socket.id] && players[socket.id]){
+      var username = players[socket.id].username;
+      var room = players[socket.id].room;
+      var payload = {
+                    username: username,
+                    socket_id: socket.id
+                  };
+                  delete players[socket.id];
+                  io.in(room).emit('player_disconnected', payload);
+    }
   });
 
 
