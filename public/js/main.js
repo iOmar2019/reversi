@@ -46,6 +46,7 @@ if(payload.socket_id == socket.id) {
 
 /* If someone joined the add a new row to the lobby table */
 var dom_elements = $('.socket_' +payload.socket_id);
+
 /* If we don't already have an entry for this person */
 if(dom_elements.length == 0) {
   var nodeA = $('<div></div>');
@@ -117,7 +118,6 @@ newNode.hide();
   $('#messages').append(newNode);
   newNode.slideDown(1000);
 });
-
 
 
 socket.on('send_message_response',function(payload){
