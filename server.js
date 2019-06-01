@@ -148,7 +148,7 @@ io.sockets.on('connection',function (socket){
             log('join_room_response');
 
   });
-    socket.on('disconnect',function(socket){
+    socket.on('disconnect',function(){
     log('A web site disconnected from the server');
   });
 
