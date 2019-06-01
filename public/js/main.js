@@ -59,7 +59,7 @@ if(dom_elements.length == 0) {
   nodeC.addClass('socket_' +payload.socket_id);
 
   nodeA.addClass('w-100');
-
+  nodeA.append(nodeB, nodeC);
   nodeB.addClass('col-9 text-right');
   nodeB.append('<h4>' +payload.username+ '</4>');
 
