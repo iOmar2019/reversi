@@ -130,17 +130,17 @@ io.sockets.on('connection',function (socket){
                           result: 'success',
                           room: room,
                           username: username,
-                          cocket_id : socket.id,
+                          socket_id : socket.id,
                           membership: numClients
                         };
-    io.in(room).emit('join_room_responses',success_data);
+    io.in(room).emit('join_room_response',success_data);
 
     for(var socket_in_room in roomObject.sockets){
       var success_data = {
                           result: 'success',
                           room: room,
                           username: players[socket_in_room].username,
-                          cocket_id : socket_in_room,
+                          socket_id : socket_in_room,
                           membership: numClients
                         };
           socket.emit('join_room_response', success_data);
