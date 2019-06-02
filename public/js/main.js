@@ -204,7 +204,7 @@ socket.on('game_start_response' ,function(payload){
   $('.socket_' +payload.socket_id+' button').replaceWith(newNode);
 
   /* Jump to a new page */
-  window.location.href = 'game.html?username='+username+'&game_id='+playload.game_id;
+  window.location.href = 'game.html?username='+username+'&game_id='+payload.game_id;
 });
 
 /* Handle a notification that we have been uninvited */
