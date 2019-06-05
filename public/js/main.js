@@ -343,39 +343,41 @@ for(row = 0; row < 8; row++){
     if(board[row][column] == 'w'){
       whitesum++;
     }
-  }
-}
-
-  /* If a board space has changed */
-  var row, column;
-  for(row = 0; row < 8; row++){
-    for (column = 0; column < 8; column++){
       /* If a board space has change */
       if (old_board[row][column] != board[row][column]){
         if (old_board[row][column] == '?' && board[row][column] == ' '){
           $('#' +row+ '_' +column).html('<img src="assets/images/empty.gif" alt="empty square"/>');
-        } else if (old_board[row][column] == '?' && board[row][column] == 'w'){
+        }
+        else if (old_board[row][column] == '?' && board[row][column] == 'w'){
           $('#' +row+ '_' +column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
-        } else if (old_board[row][column] == '?' && board[row][column] == 'b'){
+        }
+        else if (old_board[row][column] == '?' && board[row][column] == 'b'){
           $('#' +row+ '_' +column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
-        } else if (old_board[row][column] == ' ' && board[row][column] == 'w'){
+        }
+        else if (old_board[row][column] == ' ' && board[row][column] == 'w'){
           $('#' +row+ '_' +column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
-        } else if (old_board[row][column] == ' ' && board[row][column] == 'b'){
+        }
+        else if (old_board[row][column] == ' ' && board[row][column] == 'b'){
           $('#' +row+ '_' +column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
-        } else if (old_board[row][column] == 'w' && board[row][column] == ' '){
+        }
+        else if (old_board[row][column] == 'w' && board[row][column] == ' '){
           $('#' +row+ '_' +column).html('<img src="assets/images/white_to_empty.gif" alt="empty square"/>');
-        } else if (old_board[row][column] == 'b' && board[row][column] == ' '){
+        }
+        else if (old_board[row][column] == 'b' && board[row][column] == ' '){
           $('#' +row+ '_' +column).html('<img src="assets/images/black_to_empty.gif" alt="empty square"/>');
-        } else if (old_board[row][column] == 'w' && board[row][column] == 'b'){
+        }
+        else if (old_board[row][column] == 'w' && board[row][column] == 'b'){
           $('#' +row+ '_' +column).html('<img src="assets/images/white_to_black.gif" alt="black square"/>');
-        } else if (old_board[row][column] == 'b' && board[row][column] == 'w'){
+        }
+        else if (old_board[row][column] == 'b' && board[row][column] == 'w'){
           $('#' +row+ '_' +column).html('<img src="assets/images/black_to_white.gif" alt="white square"/>');
-        } else {
+        }
+        else {
           $('#' +row+ '_' +column).html('<img src="assets/images/error.gif" alt="error"/>');
         }
         /* Set up interactivity */
         $('#'+row+'_'+column).off('click');
-        if(board[row][column] == ''){
+        if(board[row][column] == ' '){
             $('#'+row+'_'+column).addClass('hovered_over');
             $('#'+row+'_'+column).click(function(r,c){
                       return function(){
@@ -411,8 +413,8 @@ socket.on('play_token_response', function(payload) {
    }
 });
 
-socket.on('game_over_response', function(payload) {
-  console.log('*** Client Log Message: \'game_over_response\'\n\tpayload: ' +JSON.stringify(payload));
+socket.on('game_over', function(payload) {
+  console.log('*** Client Log Message: \'game_over\'\n\tpayload: ' +JSON.stringify(payload));
   /* Check for a good play_token_response */
   if(payload.result == 'fail') {
     console.log(payload.message);

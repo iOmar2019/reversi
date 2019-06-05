@@ -121,7 +121,7 @@ io.sockets.on('connection', function(socket) {
     socket.join(room);
 
 
-    /* Get the room objetc */
+    /* Get the room object */
     var roomObject = io.sockets.adapter.rooms[room];
 
     /* Tell everyone that is already in the room that someone just joined */
@@ -702,7 +702,7 @@ function send_game_update(socket, game_id, message) {
   }
 
 
-  /* Make sure that only 2 people are in the game room*/
+  /* Make sure that only 2 people are in the game room */
 var roomObject;
 var numClients;
 do{
@@ -731,7 +731,8 @@ while((numClients-1) > 2);
   if((games[game_id].player_white.socket != socket.id) && (games[game_id].player_black.socket != socket.id)){
       console.log('player isn\'t assigned a color: '+socket.id);
       /* and there isn't a color to give them */
-      if((games[game_id].player_black.socket != '') && (games[game_id].player_white.socket !='')){
+      if((games[game_id].player_black.socket != '') && (games[game_id].player_white.socket != '')){
+        /* Then reset the assignments */
           games[game_id].player_white.socket = '';
           games[game_id].player_white.username = '';
           games[game_id].player_black.socket = '';
@@ -771,7 +772,7 @@ if(games[game_id].player_black.socket == ''){
   var count = 0;
   for(row = 0; row < 8;row++){
     for(column = 0; column < 8;column++){
-      if(games[game_id].board[row][column] != ''){
+      if(games[game_id].board[row][column] != ' '){
         count++;
       }
     }
@@ -794,5 +795,4 @@ if(games[game_id].player_black.socket == ''){
        }}(game_id)
        ,60*60*1000);
       }
-
 }
