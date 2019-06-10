@@ -88,7 +88,7 @@ socket.on('join_room_response', function(payload) {
   var newHTML = '<p>' + payload.username + ' just entered the lobby</p>';
   var newNode = $(newHTML);
   newNode.hide();
-  $('#messages').append(newNode);
+  $('#messages').prepend(newNode);
   newNode.slideDown(1000);
 });
 
@@ -117,7 +117,7 @@ socket.on('player_disconnected', function(payload) {
   var newHTML = '<p>' + payload.username + ' has left the lobby</p>';
   var newNode = $(newHTML);
   newNode.hide();
-  $('#messages').append(newNode);
+  $('#messages').prepend(newNode);
   newNode.slideDown(1000);
 
 });
@@ -184,7 +184,7 @@ socket.on('uninvited', function(payload) {
 
 
 
-/* Send an game_start message to the server */
+/* Send a game_start message to the server */
 function game_start(who) {
   var payload = {};
   payload.requested_user = who;
@@ -206,22 +206,12 @@ socket.on('game_start_response', function(payload) {
   window.location.href = 'game.html?username=' + username + '&game_id=' + payload.game_id;
 });
 
-/* Handle a notification that we have been uninvited */
-socket.on('uninvited', function(payload) {
-  if (payload.result == 'fail') {
-    alert(payload.message);
-    return;
-  }
-  var newNode = makeInviteButton(payload.socket_id);
-  $('.socket_' + payload.socket_id + ' button').replaceWith(newNode);
-});
-
 
 function send_message() {
   var payload = {};
   payload.room = chat_room;
   payload.message = $('#send_message_holder').val();
-  console.log('*** Client Log Message: \'send_message\' payload: ' +JSON.stringify(payload));
+  console.log('*** Client Log Message: \'send_message\' payload: '+JSON.stringify(payload));
   socket.emit('send_message', payload);
   $('#send_message_holder').val('');
 }
@@ -298,9 +288,11 @@ var old_board = [
   ['?', '?', '?', '?', '?', '?', '?', '?']
 ];
 var my_color = ' ';
+var interval_timer;
 
 socket.on('game_update', function(payload) {
-  console.log('*** Client Log Message: \'game_update\'\n\tpayload: ' +JSON.stringify(payload));
+
+  console.log('*** Client Log Message: \'game_update\'\n\tpayload: '+JSON.stringify(payload));
   /* Check for a good board update */
   if(payload.result == 'fail') {
     console.log(payload.message);
@@ -329,6 +321,26 @@ socket.on('game_update', function(payload) {
     return;
   }
 $('#my_color').html('<h3 id="my_color">I am '+my_color+'</h3>');
+$('#my_color').append('<h4>It is '+payload.game.whose_turn+'\'s turn. Elapsed time <span id="elapsed"></span></h4>');
+
+clearInterval(interval_timer);
+interval_timer = setInterval( function(last_time){
+  return function(){
+    //Do the work of updating the UI
+    var d = new Date();
+    var elapsedmilli = d.getTime() - last_time;
+    var minutes = Math.floor(elapsedmilli / (60 * 1000));
+    var seconds = Math.floor(elapsedmilli % (60 * 1000))/ 1000;
+
+    if(seconds < 10){
+      $('#elapsed').html(minutes+':0'+seconds);
+    }
+    else{
+            $('#elapsed').html(minutes+':'+seconds);
+    }
+
+  }}(payload.game.last_move_time)
+  , 1000);
 
   /* Animate changes to the board */
 
@@ -375,9 +387,13 @@ for(row = 0; row < 8; row++){
         else {
           $('#' +row+ '_' +column).html('<img src="assets/images/error.gif" alt="error"/>');
         }
-        /* Set up interactivity */
-        $('#'+row+'_'+column).off('click');
-        if(board[row][column] == ' '){
+  }
+/* Set up interactivity */
+$('#'+row+'_'+column).off('click');
+$('#'+row+'_'+column).removeClass('hovered_over');
+
+if(payload.game.whose_turn === my_color){
+        if(payload.game.legal_moves[row][column] == my_color.substr(0,1)){
             $('#'+row+'_'+column).addClass('hovered_over');
             $('#'+row+'_'+column).click(function(r,c){
                       return function(){
@@ -390,9 +406,6 @@ for(row = 0; row < 8; row++){
                       };
             }(row,column));
         }
-        else{
-          $('#'+row+'_'+column).removeClass('hovered_over');
-        }
       }
     }
   }
@@ -400,7 +413,6 @@ for(row = 0; row < 8; row++){
   $('#whitesum').html(whitesum);
 
   old_board = board;
-
 });
 
 socket.on('play_token_response', function(payload) {
